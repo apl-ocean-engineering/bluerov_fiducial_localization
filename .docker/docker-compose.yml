@@ -1,0 +1,26 @@
+services:
+  bluerov_fiducial_localization_ci:  &ci_image
+    build:
+      dockerfile: .docker/Dockerfile
+      context: ..
+      args:
+        ROS_DISTRO: jazzy
+      target: ci
+    image: ghcr.io/apl-ocean-engineering/bluerov_fiducial_localization:jazzy-ci
+    network_mode: host
+    privileged: true
+    volumes:
+      - /dev:/dev
+    x-bake:
+      platforms:
+#        - linux/amd64
+        - linux/arm64
+
+  bluerov_fiducial_localization:
+    <<: *ci_image
+    build:
+      target: deploy
+      args:
+        ROS_DISTRO: jazzy
+    image: ghcr.io/apl-ocean-engineering/bluerov_fiducial_localization:jazzy-deploy
+    command: ["ros2", "launch", "oakd_bluerov", "oakd_bluerov_apriltags_launch.py"]
