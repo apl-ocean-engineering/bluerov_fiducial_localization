@@ -14,12 +14,15 @@
 
 from ament_flake8.main import main_with_errors
 import pytest
+import os
 
 
 @pytest.mark.flake8
 @pytest.mark.linter
 def test_flake8():
-    rc, errors = main_with_errors(argv=[])
+    flake8_config_file = os.path.join(os.path.dirname(__file__), "..", ".flake8")
+    print(flake8_config_file)
+    rc, errors = main_with_errors(argv=["--config", flake8_config_file])
     assert rc == 0, "Found %d code style errors / warnings:\n" % len(
         errors
     ) + "\n".join(errors)

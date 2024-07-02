@@ -10,6 +10,11 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Install apt packages needed for CI
 USER root
+
+#
+# Don't require pinned package versions
+#
+# hadolint ignore=DL3008
 RUN apt-get -q update \
     && apt-get -q -y upgrade \
     && apt-get -q install --no-install-recommends -y \
@@ -54,15 +59,15 @@ COPY --chown=$USER_UID:$USER_GID . src/bluerov_fiducial_localization
 
 USER root
 RUN apt-get -q update \
-    && gosu ${USER} rosdep update \
-    && gosu ${USER} rosdep install -y --from-paths src --ignore-src --as-root=pip:false --rosdistro ${ROS_DISTRO} \
+    && gosu "${USER}" rosdep update \
+    && gosu "${USER}" rosdep install -y --from-paths src --ignore-src --as-root=pip:false --rosdistro "${ROS_DISTRO}" \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf "/var/lib/apt/lists/*"
 USER $USER
 
-RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
-    colcon build \
+RUN . "/opt/ros/${ROS_DISTRO}/setup.sh" \
+    && colcon build \
     && printf "source /%s/install/setup.bash"  "${USER_WORKSPACE}">> /home/${USERNAME}/.bashrc
 
 ENTRYPOINT ["/usr/bin/bash"]

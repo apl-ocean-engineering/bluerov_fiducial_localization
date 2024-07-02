@@ -20,7 +20,7 @@ setup(
             glob(os.path.join("cfg", "*")),
         ),
     ],
-    install_requires=["setuptools", "blue_localization"],
+    install_requires=["setuptools", "blue_localization", "apriltag_msgs"],
     zip_safe=True,
     maintainer="Aaron Marburg",
     maintainer_email="amarburg@uw.edu",

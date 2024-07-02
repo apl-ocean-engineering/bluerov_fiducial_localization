@@ -27,27 +27,30 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-"""ROS2 Entrypointq."""
+"""Sample launchfile for BlueROV fiducial localization."""
 
-from bluerov_fiducial_localization.fiducial_localization_node import (
-    FiducialLocalizationNode,
-)
-import rclpy
-from rclpy.executors import MultiThreadedExecutor
+import os
 
-
-def entrypoint(args=None):
-    """ROS2 Entrypoint."""
-    rclpy.init(args=args)
-
-    fl_node = FiducialLocalizationNode()
-    executor = MultiThreadedExecutor()
-
-    try:
-        rclpy.spin(fl_node, executor)
-    except KeyboardInterrupt:
-        pass
+from ament_index_python.packages import get_package_share_directory
+from launch import LaunchDescription
+from launch_ros.actions import Node
 
 
-if __name__ == "__main__":
-    entrypoint()
+def generate_launch_description():
+    """Generate a launchfile."""
+    fiducial_map_file = os.path.join(
+        get_package_share_directory("bluerov_fiducial_localization"),
+        "cfg",
+        "sample_fiducial_map.yaml",
+    )
+
+    return LaunchDescription(
+        [
+            Node(
+                package="bluerov_fiducial_localization",
+                executable="bluerov_fiducial_localization",
+                name="bluerov_fiducial_localization",
+                parameters={"fiducial_map_url": fiducial_map_file},
+            )
+        ]
+    )

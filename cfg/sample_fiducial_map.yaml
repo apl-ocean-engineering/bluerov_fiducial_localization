@@ -1,0 +1,11 @@
+maps:
+  - name: "Sample map"
+    type: "apriltags"
+    family: "36h11"
+    tags:
+      - id: 1
+        world: {x: 0, y: 0, z: 0}
+      - id: 2
+        world: {x: 1, y: 1, z: 1}
+      - id: 14
+        world: {x: 1, y: -1, z: 1}
